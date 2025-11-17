@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Maintenance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select {
+            background: #1e293b;
+            color: #fff;
+            border: 2px solid #334155;
+        }
+
+        button {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-subtitle {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .status-normal { color: #10b981; }
+        .status-warning { color: #f59e0b; }
+        .status-critical { color: #ef4444; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+        }
+
+        .sensors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .sensor-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .sensor-card.alert {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .sensor-name {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .sensor-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sensor-range {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .alerts-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-item {
+            background: rgba(239, 68, 68, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-item.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border-left-color: #f59e0b;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .alert-message {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .no-alerts {
+            text-align: center;
+            color: #10b981;
+            padding: 30px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            select, button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛩️ Turbofan Engine Monitoring System</h1>
+            <p class="subtitle">Real-time Predictive Maintenance with ML-Powered Analytics</p>
+        </header>
+
+        <div class="controls">
+            <select id="scenarioSelect">
+                <option value="normal">Normal Operation</option>
+                <option value="gradual_degradation">Gradual Degradation</option>
+                <option value="critical">Critical Condition</option>
+                <option value="emergency">Emergency</option>
+                <option value="sudden_anomaly">Sudden Anomaly</option>
+                <option value="pressure_drop">Pressure Drop</option>
+            </select>
+            <button class="btn-start" id="startBtn">▶ Start Monitoring</button>
+            <button class="btn-stop" id="stopBtn" disabled>⏸ Pause</button>
+            <button class="btn-reset" id="resetBtn">🔄 Reset</button>
+            <span id="status" style="margin-left: auto; font-weight: 600;">Ready</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Current Cycle</div>
+                <div class="stat-value" id="cycleValue">0</div>
+                <div class="stat-subtitle">Engine Operation Cycles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Remaining Useful Life</div>
+                <div class="stat-value status-normal" id="rulValue">-- </div>
+                <div class="stat-subtitle">Predicted cycles remaining</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Health Score</div>
+                <div class="stat-value status-normal" id="healthValue">100%</div>
+                <div class="stat-subtitle">Overall engine condition</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Alerts</div>
+                <div class="stat-value status-normal" id="alertCount">0</div>
+                <div class="stat-subtitle">Threshold violations</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Temperature Sensors (°R)</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Pressure Sensors (psia)</h3>
+                <canvas id="pressureChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom: 30px;">
+            <h3 class="chart-title">RUL Prediction Over Time</h3>
+            <canvas id="rulChart"></canvas>
+        </div>
+
+        <h3 class="chart-title" style="margin-bottom: 15px;">Current Sensor Readings</h3>
+        <div class="sensors-grid" id="sensorsGrid"></div>
+
+        <div class="alerts-container">
+            <h3 class="chart-title">🚨 Active Alerts</h3>
+            <div id="alertsList">
+                <div class="no-alerts">✅ No alerts - All systems operating normally</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let isRunning = false;
+        let updateInterval = null;
+        let thresholds = {};
+
+        // Chart configurations
+        const tempChart = new Chart(document.getElementById('tempChart'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'T2', data: [], borderColor: '#3b82f6', tension: 0.4 },
+                    { label: 'T24', data: [], borderColor: '#10b981', tension: 0.4 },
+                    { label: 'T30', data: [], borderColor: '#f59e0b', tension: 0.4 },
+                    { label: 'T50', data: [], borderColor: '#ef4444', tension: 0.4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                }
+            }
+        });
+
+        const pressureChart = new Chart(document.getElementById('pressureChart'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'P2', data: [], borderColor: '#8b5cf6', tension: 0.4 },
+                    { label: 'P30', data: [], borderColor: '#ec4899', tension: 0.4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                }
+            }
+        });
+
+        const rulChart = new Chart(document.getElementById('rulChart'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'RUL Prediction',
+                    data: [],
+                    borderColor: '#06b6d4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                }
+            }
+        });
+
+        // Load thresholds
+        async function loadThresholds() {
+            try {
+                const response = await fetch(`${API_BASE}/thresholds`);
+                thresholds = await response.json();
+            } catch (error) {
+                console.error('Error loading thresholds:', error);
+            }
+        }
+
+        // Update dashboard
+        async function updateDashboard() {
+            try {
+                const response = await fetch(`${API_BASE}/current`);
+                const data = await response.json();
+
+                // Update stats
+                document.getElementById('cycleValue').textContent = data.cycle;
+                document.getElementById('rulValue').textContent = `${data.prediction.rul} cycles`;
+                document.getElementById('healthValue').textContent = `${data.prediction.health_score}%`;
+                document.getElementById('alertCount').textContent = data.alerts.length;
+
+                // Update RUL color
+                const rulElement = document.getElementById('rulValue');
+                const healthElement = document.getElementById('healthValue');
+                const alertElement = document.getElementById('alertCount');
+                
+                if (data.prediction.rul > 50) {
+                    rulElement.className = 'stat-value status-normal';
+                    healthElement.className = 'stat-value status-normal';
+                } else if (data.prediction.rul > 30) {
+                    rulElement.className = 'stat-value status-warning';
+                    healthElement.className = 'stat-value status-warning';
+                } else {
+                    rulElement.className = 'stat-value status-critical';
+                    healthElement.className = 'stat-value status-critical';
+                }
+
+                alertElement.className = data.alerts.length > 0 ? 'stat-value status-critical' : 'stat-value status-normal';
+
+                // Update charts
+                if (tempChart.data.labels.length > 30) {
+                    tempChart.data.labels.shift();
+                    tempChart.data.datasets.forEach(ds => ds.data.shift());
+                }
+                if (pressureChart.data.labels.length > 30) {
+                    pressureChart.data.labels.shift();
+                    pressureChart.data.datasets.forEach(ds => ds.data.shift());
+                }
+                if (rulChart.data.labels.length > 50) {
+                    rulChart.data.labels.shift();
+                    rulChart.data.datasets[0].data.shift();
+                }
+
+                tempChart.data.labels.push(data.cycle);
+                pressureChart.data.labels.push(data.cycle);
+                rulChart.data.labels.push(data.cycle);
+
+                tempChart.data.datasets[0].data.push(data.reading.T2);
+                tempChart.data.datasets[1].data.push(data.reading.T24);
+                tempChart.data.datasets[2].data.push(data.reading.T30);
+                tempChart.data.datasets[3].data.push(data.reading.T50);
+
+                pressureChart.data.datasets[0].data.push(data.reading.P2);
+                pressureChart.data.datasets[1].data.push(data.reading.P30);
+
+                rulChart.data.datasets[0].data.push(data.prediction.rul);
+
+                tempChart.update('none');
+                pressureChart.update('none');
+                rulChart.update('none');
+
+                // Update sensors
+                updateSensors(data.reading, data.alerts);
+
+                // Update alerts
+                updateAlerts(data.alerts);
+
+                // Step to next cycle
+                if (isRunning) {
+                    await fetch(`${API_BASE}/control/step`, { method: 'POST' });
+                }
+
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+            }
+        }
+
+        function updateSensors(reading, alerts) {
+            const grid = document.getElementById('sensorsGrid');
+            const sensors = ['T2', 'T24', 'T30', 'T50', 'P2', 'P30', 'Nf', 'Nc'];
+            
+            grid.innerHTML = sensors.map(sensor => {
+                const value = reading[sensor];
+                const threshold = thresholds[sensor];
+                const isAlert = alerts.some(a => a.sensor === sensor);
+                
+                return `
+                    <div class="sensor-card ${isAlert ? 'alert' : ''}">
+                        <div class="sensor-name">${sensor} - ${threshold?.name || ''}</div>
+                        <div class="sensor-value">${value?.toFixed(2) || '--'}</div>
+                        <div class="sensor-range">${threshold?.unit || ''} | Range: ${threshold?.min} - ${threshold?.max}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateAlerts(alerts) {
+            const alertsList = document.getElementById('alertsList');
+            
+            if (alerts.length === 0) {
+                alertsList.innerHTML = '<div class="no-alerts">✅ No alerts - All systems operating normally</div>';
+                return;
+            }
+
+            alertsList.innerHTML = alerts.map(alert => `
+                <div class="alert-item ${alert.severity.toLowerCase()}">
+                    <div class="alert-header">
+                        <span>${alert.severity} - ${alert.sensor_name}</span>
+                        <span>${alert.value} ${alert.unit}</span>
+                    </div>
+                    <div class="alert-message">${alert.message}</div>
+                    <div class="alert-message" style="margin-top: 5px; font-style: italic;">Impact: ${alert.impact}</div>
+                </div>
+            `).join('');
+        }
+
+        // Control functions
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            const scenario = document.getElementById('scenarioSelect').value;
+            
+            try {
+                await fetch(`${API_BASE}/control/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scenario })
+                });
+
+                isRunning = true;
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('status').textContent = '🟢 Running';
+
+                updateInterval = setInterval(updateDashboard, 1000);
+                updateDashboard();
+            } catch (error) {
+                console.error('Error starting simulation:', error);
+                alert('Error: Make sure backend API is running on http://localhost:5000');
+            }
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', async () => {
+            await fetch(`${API_BASE}/control/stop`, { method: 'POST' });
+            
+            isRunning = false;
+            clearInterval(updateInterval);
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('status').textContent = '⏸ Paused';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', async () => {
+            await fetch(`${API_BASE}/control/reset`, { method: 'POST' });
+            
+            isRunning = false;
+            clearInterval(updateInterval);
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('status').textContent = 'Ready';
+
+            // Clear charts
+            tempChart.data.labels = [];
+            tempChart.data.datasets.forEach(ds => ds.data = []);
+            pressureChart.data.labels = [];
+            pressureChart.data.datasets.forEach(ds => ds.data = []);
+            rulChart.data.labels = [];
+            rulChart.data.datasets[0].data = [];
+            
+            tempChart.update();
+            pressureChart.update();
+            rulChart.update();
+
+            // Reset stats
+            document.getElementById('cycleValue').textContent = '0';
+            document.getElementById('rulValue').textContent = '--';
+            document.getElementById('healthValue').textContent = '100%';
+            document.getElementById('alertCount').textContent = '0';
+            document.getElementById('sensorsGrid').innerHTML = '';
+            document.getElementById('alertsList').innerHTML = '<div class="no-alerts">✅ No alerts - All systems operating normally</div>';
+        });
+
+        // Initialize
+        loadThresholds();
+    </script>
+</body>
+</html>

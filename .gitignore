@@ -1,0 +1,108 @@
+# ----------------------------------------------------------------
+# Python
+# ----------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ----------------------------------------------------------------
+# Virtual Environments
+# ----------------------------------------------------------------
+# Common virtual environment directories
+venv/
+env/
+.venv/
+.env/
+
+# Pip/Poetry
+pip-wheel-metadata/
+.pypirc
+.hypothesis/
+
+# ----------------------------------------------------------------
+# Data & Models (IMPORTANT)
+# ----------------------------------------------------------------
+# Large data files
+# NOTE: Add your specific data directories or files
+# Use 'git add -f' to force-add small, necessary data files
+data/
+*.csv
+*.json
+*.jsonl
+*.parquet
+*.npy
+*.npz
+*.sqlite
+*.db
+
+# Trained models and checkpoints
+models/
+checkpoints/
+*.pth
+*.pt
+*.h5
+*.onnx
+*.pkl
+*.joblib
+
+# ----------------------------------------------------------------
+# Notebooks & IDE
+# ----------------------------------------------------------------
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+
+# macOS
+.DS_Store
+
+# ----------------------------------------------------------------
+# Experiment Tracking & ML Ops
+# ----------------------------------------------------------------
+# DVC (Data Version Control)
+.dvc/
+.dvcignore
+
+# MLflow
+mlruns/
+.mlflow/
+
+# Weights & Biases
+wandb/
+
+# ----------------------------------------------------------------
+# Logs & Secrets
+# ----------------------------------------------------------------
+# Log files
+*.log
+logs/
+
+# Environment variables and secrets
+# CRITICAL: Never commit secrets!
+.env
+*.key
+*.secret
+credentials.*
+
+# ----------------------------------------------------------------
+# Miscellaneous
+# ----------------------------------------------------------------
+# Temporary files
+*~
+*.swp
+*.swo
