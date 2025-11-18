@@ -1,0 +1,114 @@
+{
+  "T2": {
+    "normal_range": {
+      "min": 518.67,
+      "max": 518.67
+    },
+    "warning_range": {
+      "min": 518.67,
+      "max": 518.67
+    },
+    "critical_max": 518.67,
+    "unit": "\u00b0R",
+    "healthy_baseline": 518.67,
+    "degradation_direction": "increase"
+  },
+  "T24": {
+    "normal_range": {
+      "min": 641.67,
+      "max": 643.17
+    },
+    "warning_range": {
+      "min": 641.3,
+      "max": 643.55
+    },
+    "critical_max": 644.53,
+    "unit": "\u00b0R",
+    "healthy_baseline": 642.42,
+    "degradation_direction": "increase"
+  },
+  "T30": {
+    "normal_range": {
+      "min": 1578.16,
+      "max": 1596.82
+    },
+    "warning_range": {
+      "min": 1573.5,
+      "max": 1601.49
+    },
+    "critical_max": 1616.91,
+    "unit": "\u00b0R",
+    "healthy_baseline": 1587.49,
+    "degradation_direction": "increase"
+  },
+  "T50": {
+    "normal_range": {
+      "min": 1391.74,
+      "max": 1415.76
+    },
+    "warning_range": {
+      "min": 1385.73,
+      "max": 1421.77
+    },
+    "critical_max": 1441.49,
+    "unit": "\u00b0R",
+    "healthy_baseline": 1403.75,
+    "degradation_direction": "increase"
+  },
+  "P2": {
+    "normal_range": {
+      "min": 14.62,
+      "max": 14.62
+    },
+    "warning_range": {
+      "min": 14.62,
+      "max": 14.62
+    },
+    "critical_max": 15.35,
+    "unit": "psia",
+    "healthy_baseline": 14.62,
+    "degradation_direction": "decrease/increase"
+  },
+  "P30": {
+    "normal_range": {
+      "min": 552.62,
+      "max": 555.1
+    },
+    "warning_range": {
+      "min": 552.01,
+      "max": 555.72
+    },
+    "critical_max": 582.86,
+    "unit": "psia",
+    "healthy_baseline": 553.86,
+    "degradation_direction": "decrease/increase"
+  },
+  "Nf": {
+    "normal_range": {
+      "min": 2387.96,
+      "max": 2388.17
+    },
+    "warning_range": {
+      "min": 2387.9,
+      "max": 2388.22
+    },
+    "critical_max": 2507.58,
+    "unit": "rpm",
+    "healthy_baseline": 2388.06,
+    "degradation_direction": "decrease/increase"
+  },
+  "Nc": {
+    "normal_range": {
+      "min": 9040.39,
+      "max": 9075.23
+    },
+    "warning_range": {
+      "min": 9031.68,
+      "max": 9083.94
+    },
+    "critical_max": 9528.99,
+    "unit": "rpm",
+    "healthy_baseline": 9057.81,
+    "degradation_direction": "decrease/increase"
+  }
+}

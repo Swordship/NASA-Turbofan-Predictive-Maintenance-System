@@ -1,0 +1,58 @@
+{
+  "T2": {
+    "min": 515.0,
+    "max": 525.0,
+    "unit": "\u00b0R",
+    "name": "Fan Inlet Temperature",
+    "critical_impact": "Intake air temperature anomaly"
+  },
+  "T24": {
+    "min": 635.0,
+    "max": 650.0,
+    "unit": "\u00b0R",
+    "name": "LPC Outlet Temperature",
+    "critical_impact": "Low pressure compressor efficiency"
+  },
+  "T30": {
+    "min": 1570.0,
+    "max": 1600.0,
+    "unit": "\u00b0R",
+    "name": "HPC Outlet Temperature",
+    "critical_impact": "High pressure compressor health - CRITICAL PARAMETER"
+  },
+  "T50": {
+    "min": 1385.0,
+    "max": 1420.0,
+    "unit": "\u00b0R",
+    "name": "LPT Outlet Temperature",
+    "critical_impact": "Turbine blade degradation - CRITICAL PARAMETER"
+  },
+  "P2": {
+    "min": 14.0,
+    "max": 15.5,
+    "unit": "psia",
+    "name": "Fan Inlet Pressure",
+    "critical_impact": "Inlet pressure anomaly"
+  },
+  "P30": {
+    "min": 43.0,
+    "max": 47.0,
+    "unit": "psia",
+    "name": "HPC Outlet Pressure",
+    "critical_impact": "Compressor pressure ratio - indicates seal wear"
+  },
+  "Nf": {
+    "min": 2300.0,
+    "max": 2500.0,
+    "unit": "rpm",
+    "name": "Fan Speed",
+    "critical_impact": "Fan imbalance or bearing issues"
+  },
+  "Nc": {
+    "min": 9000.0,
+    "max": 9500.0,
+    "unit": "rpm",
+    "name": "Core Speed",
+    "critical_impact": "Core rotor imbalance"
+  }
+}

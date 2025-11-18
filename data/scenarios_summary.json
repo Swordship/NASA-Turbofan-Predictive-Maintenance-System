@@ -1,0 +1,89 @@
+{
+  "scenarios": [
+    {
+      "id": "normal",
+      "name": "Normal Operation",
+      "description": "All parameters within safe ranges",
+      "expected_rul": 150,
+      "characteristics": {
+        "variance": "\u00b10.5%",
+        "trend": "0.00% per cycle"
+      },
+      "typical_alerts": [
+        "None - all parameters within limits"
+      ]
+    },
+    {
+      "id": "gradual_degradation",
+      "name": "Gradual Degradation",
+      "description": "Temperature rising, pressure declining slowly",
+      "expected_rul": 80,
+      "characteristics": {
+        "variance": "\u00b11.0%",
+        "trend": "0.10% per cycle"
+      },
+      "typical_alerts": [
+        "T30 trending upward",
+        "P30 decreasing slightly"
+      ]
+    },
+    {
+      "id": "critical",
+      "name": "Critical Condition",
+      "description": "Multiple parameters approaching warning levels",
+      "expected_rul": 30,
+      "characteristics": {
+        "variance": "\u00b11.5%",
+        "trend": "0.20% per cycle"
+      },
+      "typical_alerts": [
+        "T30 near threshold",
+        "T50 elevated",
+        "Multiple warnings"
+      ]
+    },
+    {
+      "id": "emergency",
+      "name": "Emergency - Imminent Failure",
+      "description": "Threshold breaches, immediate maintenance required",
+      "expected_rul": 10,
+      "characteristics": {
+        "variance": "\u00b12.0%",
+        "trend": "0.30% per cycle"
+      },
+      "typical_alerts": [
+        "T30 exceeds threshold",
+        "Critical alerts",
+        "Immediate action required"
+      ]
+    },
+    {
+      "id": "sudden_anomaly",
+      "name": "Sudden Anomaly",
+      "description": "Sudden spike in temperature (bird strike or FOD)",
+      "expected_rul": 100,
+      "characteristics": {
+        "variance": "\u00b11.0%",
+        "trend": "0.00% per cycle"
+      },
+      "typical_alerts": [
+        "Sudden T30 spike at cycle 50",
+        "FOD event simulation"
+      ]
+    },
+    {
+      "id": "pressure_drop",
+      "name": "Pressure System Failure",
+      "description": "Progressive pressure loss (seal failure)",
+      "expected_rul": 50,
+      "characteristics": {
+        "variance": "\u00b10.8%",
+        "trend": "-0.20% per cycle"
+      },
+      "typical_alerts": [
+        "Progressive pressure loss",
+        "Seal failure indicator"
+      ]
+    }
+  ]
+}
